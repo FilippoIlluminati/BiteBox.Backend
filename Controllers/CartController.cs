@@ -57,16 +57,23 @@ namespace BiteBox.Backend.Controllers
                 .Include(c => c.CartItems)
                 .FirstOrDefault(c => c.UserId == userId);
 
+            if (cart == null)
+            {
+                return NotFound("Carrello non trovato.");
+            }
+
            
             var newCartItem = new CartItem
-                {
-                    CartId = cart.Id,
-                    CartItems = new List<CartItem>()
-                };
-            _dbContext.CartItems.Add(cartRow);
+            {
+                CartId = cart.Id,
+                MenuItemId = cartRow.MenuItemId,
+                Quantity = cartRow.Quantity,
+            };
+            _dbContext.CartItems.Add(newCartItem);
             _dbContext.SaveChanges();
 
             return Ok(cart);
+        }
         
 
         // aggiorna la quantità di un elemento nel carrello
@@ -95,13 +102,13 @@ namespace BiteBox.Backend.Controllers
             var userId = User.Identity?.Name;
             if (userId == null) return Unauthorized();
 
-            var cartRow = _dbContext.CartItems
+            var cartItem = _dbContext.CartItems
                 .Include(cr => cr.Cart)
                 .FirstOrDefault(cr => cr.Id == id && cr.Cart.UserId == userId);
 
-            if (cartRow == null) return NotFound("Riga del carrello non trovata.");
+            if (cartItem == null) return NotFound("Riga del carrello non trovata.");
 
-            _dbContext.CartItems.Remove(cartItems);
+            _dbContext.CartItems.Remove(cartItem);
             _dbContext.SaveChanges();
 
             return Ok("Elemento rimosso dal carrello.");
