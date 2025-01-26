@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BiteBox.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250109215426_Setup")]
-    partial class Setup
+    [Migration("20250126094433_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
